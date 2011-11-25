@@ -33,7 +33,7 @@ module.exports = function (urls) {
   }
 
   // This closure is returned as the request handler.
-  return function (req, res, next) {
+  middleware = function (req, res, next) {
     //
     // in node-http-proxy middlewares, `proxy` is the prototype of `next`
     // (this means node-http-proxy middlewares support both the connect API (req, res, next)
@@ -55,4 +55,28 @@ module.exports = function (urls) {
     }
     next() //if there wasno matching rule, fall back to next middleware.
   }
+
+  // this closure is attached to the request handler for websocket proxying
+  middleware.proxyWebSocketRequest = function (req, socket, head, next) {
+    //
+    // Same as above, but for WebSocket
+    //
+    var proxy = next;
+    for (var k in matchers) {
+      // for each URL matcher, try the request's URL.
+      var m = matchers[k](req.url);
+      // If it's a match:
+      if (m) {
+        // Replace the local URL with the destination URL.
+        req.url = m.url;
+        // If routing to a server on another domain, the hostname in the request must be changed.
+        req.headers.host = m.host;
+        // Once any changes are taken care of, this line makes the magic happen.
+        return proxy.proxyWebSocketRequest(req, socket, head, m.dest);
+      }
+    }
+    next() //if there wasno matching rule, fall back to next middleware.
+  }
+  
+  return middleware;
 }
