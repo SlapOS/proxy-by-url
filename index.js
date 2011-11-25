@@ -13,7 +13,7 @@ function matcher (url, dest) {
   // storing them in an array - on each request, if the URL matches one that has
   // a function stored for it, the function will be called.
   return function (url) {
-    var m = r(url)
+    var m = url.match(r);
     if (!m) {
       return;
     }
