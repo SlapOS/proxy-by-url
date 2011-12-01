@@ -16,7 +16,7 @@ function getMatchers(urls) {
     // Call the 'matcher' function above, and store the resulting closure.
     // First, turn the URL into a regex.  
     // NOTE: Turning user input directly into a Regular Expression is NOT SAFE.
-    r = new RegExp(url.replace(/\//, '\\/'));
+    r = new RegExp(url.replace(/\//, '^\\/'));
     // This next block of code may look a little confusing. 
     // It returns a closure (anonymous function) for each URL to be matched,
     // storing them in an array - on each request, if the URL matches one that has
