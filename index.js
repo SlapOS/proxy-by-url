@@ -28,7 +28,7 @@ function getMatchers(urls) {
         if (!m) {
           return;
         }
-        var path = url.slice(m[0].length);
+        var path = url.slice(m[0].length + 1);
         console.log('proxy:', url, '->', dest);
         return ({url: path, dest: dest});
       }})(r);
