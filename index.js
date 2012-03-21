@@ -48,14 +48,17 @@ module.exports = function (urls) {
     urlsFile = urls,
     urls = JSON.parse(fs.readFileSync(urlsFile));
     fs.watchFile(urlsFile, function () {
-      var self = this;
       console.log("Reloading urls...");
       fs.readFile(urlsFile, function (err, data) {
-        if (err) {
-          self.emit('error', err);
+        if (!err) {
+          try {
+            urls = JSON.parse(data);
+            matchers = getMatchers(urls);
+          }
+          catch (e) {
+            console.log("Syntax error in json file.");
+          }
         }
-        urls = JSON.parse(data);
-        matchers = getMatchers(urls);
       });
     });
   }
