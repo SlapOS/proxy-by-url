@@ -48,6 +48,7 @@ module.exports = function (urls) {
     urlsFile = urls,
     urls = JSON.parse(fs.readFileSync(urlsFile));
     fs.watchFile(urlsFile, function () {
+      var self = this;
       console.log("Reloading urls...");
       fs.readFile(urlsFile, function (err, data) {
         if (err) {
